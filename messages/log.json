@@ -1,0 +1,16 @@
+{
+  "commandDescription": "Set a trace flag for the specified user", 
+  "entity": "[default: user from targetusername] salesforce user id",
+  "logType": "[default: user] salesforce log type DEVELOPER_LOG or USER_DEBUG",
+  "startDate": "log start date",
+  "expirationDate": "log experation date",
+  "debugLevelName": "[default: SFDC_DevConsole] log level name",
+  "errorNoOrgResults": "No results found for the org '%s'",
+  "errorDebugLevelName": "No results found for debug level %s",
+  "errorEntity": "No results found for user id %s",
+  "errorLogType": "Invalid option %s",
+  "errorInvalidExpirationDate": "Your expirationdate must be in future",
+  "errorInvalidDateRanges": "Invalid ranges. Your startdate is greater than your expiration date",
+  "errorMaximumTimeFrame": "The maximum time for the trace is 24 hours"
+
+}

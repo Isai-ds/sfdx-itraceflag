@@ -1,0 +1,9 @@
+{
+  "commandDescription": "Save salesforce logs locally", 
+  "entity": "[default: user from targetusername] salesforce user id",
+  "filter": "Filter to get the logs. q=\"(Application='Browser' OR LogLength>1000) AND Status = 'Success' LIMIT 10\"",
+  "directory": "Directory to save the logs",
+  "errorNoOrgResults": "No results found for the org '%s'",
+  "errorEntity": "No results found for user id %s",
+  "errorPath": "The directory path does not exist. Please review it"
+}
