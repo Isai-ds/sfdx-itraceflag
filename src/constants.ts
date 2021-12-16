@@ -8,6 +8,8 @@ export namespace ItraceConstants {
     export const COMMAND_GET_LOG = 'logs'
     export const PACKAGE_NAME = 'sfdx-itraceflag'
     export const LOG_EXTENSION =  '.log'
+    export const MALFORMED_QUERY = 'MALFORMED_QUERY'
+    export const INVALID_FIELD = 'INVALID_FIELD'
     export const HOUR_2_MILLISECONDS = 3600000
     export const MAX_DIFF_HOUR = 24
     export const DEFAULT_MINUTES = 30

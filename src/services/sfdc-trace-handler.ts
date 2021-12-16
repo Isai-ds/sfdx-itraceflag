@@ -112,9 +112,17 @@ class TraceHandlerSaveLog {
         }else{
             query = `SELECT Id, LogLength, Status FROM ApexLog ${filters}` 
         }
-        this.apexLogs = await this.sfDAO.getApexLogs(query)
+
+        try {
+            this.apexLogs = await this.sfDAO.getApexLogs(query)    
+        } catch (error) {
+            util.handleQueryException(error)
+        }
+        
         return this.apexLogs 
     }
+
+
 
     notResultsFound (): void{
         this.ux.log(`Found 0 logs`)

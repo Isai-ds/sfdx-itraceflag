@@ -27,7 +27,7 @@ export default class TraceFlagGetLogs extends SfdxCommand {
     directory: flags.directory({
       char: 'd',
       description: messages.getMessage('directory'),
-      required: false
+      required: true
     }) 
   };
 
