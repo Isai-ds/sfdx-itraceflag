@@ -10,9 +10,9 @@ const messages = Messages.loadMessages(ItraceConstants.PACKAGE_NAME, ItraceConst
 export default class TraceFlagGetLogs extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
-  protected static requiresUsername = true;
-  public static args = [{name: 'file'}];
+  public static examples = [messages.getMessage('commandExample1'),messages.getMessage('commandExample2'),messages.getMessage('commandExample3')];
 
+  protected static requiresUsername = true;
   protected static flagsConfig = {
     entity: flags.id({
       char: 'e', 

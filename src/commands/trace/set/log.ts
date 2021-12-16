@@ -12,14 +12,14 @@ const messages = Messages.loadMessages(ItraceConstants.PACKAGE_NAME, ItraceConst
 export default class TraceFlagLog extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
+  public static examples = [messages.getMessage('commandExample1'),messages.getMessage('commandExample2'),messages.getMessage('commandExample3')];
+
   protected static requiresUsername = true;
-  public static args = [{name: 'file'}];
 
   protected static flagsConfig = {
     entity: flags.id({
       char: 'e', 
-      description: messages.getMessage('entity'),
-      required: false
+      description: messages.getMessage('entity')    
     }),
     logtype: flags.enum({
       char: 'l',
