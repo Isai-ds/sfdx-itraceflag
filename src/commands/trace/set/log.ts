@@ -39,19 +39,25 @@ export default class TraceFlagLog extends SfdxCommand {
       char: 'd',
       description: messages.getMessage('debugLevelName'),
       default: 'SFDC_DevConsole'
-    })    
+    }),
+    'duration': flags.minutes({
+      description: messages.getMessage('duration'),
+      min: 30,
+      max: 1440 
+    })        
   };
 
   public async run(): Promise<AnyJson> {
     
-    try{
-     
-     await trace({
+    try{  
+      let duration = this.flags.duration ? this.flags.duration.quantity : ItraceConstants.DEFAULT_MINUTES
+      await trace({
           entity: this.flags.entity,
           logtype: this.flags.logtype,
           debuglevelname: this.flags.debuglevelname,
           startdate: this.flags.startdate,
-          expirationdate: this.flags.expirationdate
+          expirationdate: this.flags.expirationdate,
+          duration: duration
         },
         this.org,
         this.ux

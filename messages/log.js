@@ -5,6 +5,7 @@ module.exports = {
   "startDate": "date and time when the trace flag take effect. Expiration date mus be less 24 hours",
   "expirationDate": "date an time when the trace flag expires",
   "debugLevelName": "developer name of the debug level to assign",
+  "duration": "trace log duration in minutes. Default 30 minutes. Duration parameter is ignored when expirationdate is not null",
   "errorNoOrgResults": "No results found for the org '%s'",
   "errorDebugLevelName": "No results found for debug level %s",
   "errorEntity": "No results found for user id %s",

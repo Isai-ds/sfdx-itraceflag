@@ -17,6 +17,7 @@ export interface Configuration{
     debuglevelname?: string;
     filters?: string;
     directory?: string;
+    duration?: number
 }
 
 export interface TraceConfig {

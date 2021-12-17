@@ -48,8 +48,8 @@ class ITraceDateTime {
     }
 
     setDefaultExpirationDate(): void{
-        this.config.expirationdate = new Date(this.config.startdate)
-        const sMinutes = this.config.expirationdate.getMinutes() + ItraceConstants.DEFAULT_MINUTES
+        this.config.expirationdate = new Date(this.config.startdate)       
+        const sMinutes = this.config.expirationdate.getMinutes() + this.config.duration
         this.config.expirationdate.setMinutes(sMinutes);
     } 
 
