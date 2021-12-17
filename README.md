@@ -25,15 +25,16 @@ sfdx trace:set:log -u myOrg -s 'Dec 16 2021 13:43' -x 'Dec 16 2021 15:00' -e 005
 ```
 
 <!-- commands -->
-* [`sfdx trace:set:log -u <string> -s <datetime> -x <datetime> [-e <string>] [-l user|developer] [-d <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracesetlog--u-string--s-datetime--x-datetime--e-string--l-userdeveloper--d-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx trace:set:log -u <string> -s <datetime> -x <datetime> [-e <string>] [-l user|developer] [-d <string>] [--duration <minutes>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracesetlog--u-string--s-datetime--x-datetime--e-string--l-userdeveloper--d-string---duration-minutes---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx trace:set:log -u <string> -s <datetime> -x <datetime> [-e <string>] [-l user|developer] [-d <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx trace:set:log -u <string> -s <datetime> -x <datetime> [-e <string>] [-l user|developer] [-d <string>] [--duration <minutes>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Create a trace record flag in the target org
 ```
 USAGE
   $ sfdx trace:set:log -u <string> -s <datetime> -x <datetime> [-e <string>] [-l user|developer] [-d <string>] 
-  [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+  [--duration <minutes>] [--apiversion <string>] [--json] 
+  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
   -u, --targetusername=targetusername                                               username or alias for the target
@@ -55,6 +56,11 @@ OPTIONS
   
   -d, --debuglevelname                                                              [default: SFDC_DevConsole] developer 
                                                                                     name of the debug level to assign
+
+  --duration=duration                                                               trace log duration in minutes. 
+                                                                                    Default 30 minutes. Duration parameter 
+                                                                                    is ignored when expirationdate is 
+                                                                                    not null
   
   --apiversion=apiversion                                                           override the api version used for
                                                                                     api requests made by this command
