@@ -1,7 +1,7 @@
 {
   "name": "sfdx-itraceflag",
   "description": "Set debug trace flags and download logs for Replay Debugger",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Isai Desales",
   "bugs": "https://github.com/Isai-ds/sfdx-itraceflag/issues",
   "dependencies": {
