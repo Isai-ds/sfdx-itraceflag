@@ -34,7 +34,6 @@ class TraceHandler {
     }
     async trace () : Promise<void> {   
         this.traceFlag = await this.getTraceFlag()
-        this.logInfo()
         if (this.traceFlag.Id){
             await this.updateTraceFlag()
         }else{
@@ -61,12 +60,6 @@ class TraceHandler {
         traceFlag.ExpirationDate = this.config.expirationDate
         traceFlag.DebugLevelId = this.config.debugLevel.Id
         return traceFlag
-    }
-
-    logInfo() : void {
-        if (this.currentSession){
-            this.ux.log('You have a current trace session. It will be updated with the new information provided')
-        }
     }
 
     async updateTraceFlag () : Promise<void>{
