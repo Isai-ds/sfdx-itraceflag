@@ -77,7 +77,7 @@ EXAMPLES
   $ sfdx trace:get:logs -u myOrg -d /documents/log -f "Operation = 'VFRemoting' AND Status != 'Success'"
 ```
 
-_See code: [lib/commands/trace/get/logs.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.3/lib/commands/trace/get/logs.js)_
+_See code: [lib/commands/trace/get/logs.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.4/lib/commands/trace/get/logs.js)_
 
 ## `sfdx trace:set:log [-e <id>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
@@ -131,5 +131,5 @@ EXAMPLES
   $ sfdx trace:set:log -u myOrg -s 'Dec 16 2021 13:43' -x 'Dec 16 2021 15:00' -d Custom_Log_Type -l developer
 ```
 
-_See code: [lib/commands/trace/set/log.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.3/lib/commands/trace/set/log.js)_
+_See code: [lib/commands/trace/set/log.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.4/lib/commands/trace/set/log.js)_
 <!-- commandsstop -->
