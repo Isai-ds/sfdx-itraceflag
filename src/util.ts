@@ -6,7 +6,7 @@ Messages.importMessagesDirectory(__dirname);
 const logsMessages = Messages.loadMessages(ItraceConstants.PACKAGE_NAME, ItraceConstants.COMMAND_GET_LOG);
 
 export function isSFDCID (value: string): boolean{
-    const regexExp = new RegExp('[a-zA-Z0-9]{18}|[a-zA-Z0-9]{15}')
+    const regexExp = new RegExp('([a-zA-Z0-9]{18}|[a-zA-Z0-9]{15})$')
     return regexExp.test(value)
 }
 
