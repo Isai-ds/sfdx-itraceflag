@@ -60,8 +60,18 @@ class SalesforceDAO {
         const result = await this.connection.tooling.update('TraceFlag',traceFlag) as RecordResult
         return result
     }
+
     async createTraceFlag (traceFlag: TraceFlag): Promise<RecordResult>{
         const result = await this.connection.tooling.create('TraceFlag',traceFlag) as RecordResult
+        return result
+    }
+
+    async deleteApexLogs (logs: string[]): Promise<RecordResult[]>{
+        const result = await this.connection.tooling.delete('ApexLog',
+            logs,{
+                allOrNone:false
+            }
+        ) as RecordResult[]
         return result
     }
 }

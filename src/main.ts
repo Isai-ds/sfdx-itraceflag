@@ -1,6 +1,6 @@
 import { Org } from '@salesforce/core';
 import {Configuration} from './lib/itrace-interfaces'
-import {TraceSFDCHandler, TraceSaveLogSFDCHandler} from './services/sfdc-handler'
+import {TraceSFDCHandler, TraceLogSFDCHandler} from './services/sfdc-handler'
 import * as DateTimeHandler from './services/datetime-handler'
 import { UX } from '@salesforce/command';
 import * as TraceHandler from './services/sfdc-trace-handler'
@@ -20,7 +20,7 @@ export async function trace(configuration: Configuration, org: Org, ux: UX) {
 }
 
 export async function logs(configuration: Configuration, org: Org, ux: UX){
-    const sfdcHandler = new TraceSaveLogSFDCHandler(configuration, org)
+    const sfdcHandler = new TraceLogSFDCHandler(configuration, org)
     await sfdcHandler.execute()     
     
     const dirHandler = DirectoryHandler.getInstance()
@@ -31,5 +31,16 @@ export async function logs(configuration: Configuration, org: Org, ux: UX){
         entity: sfdcHandler.getEntity(),
         filters: configuration.filters,
         directory: configuration.directory
+    }, org, ux)
+}
+
+export async function deleteLogs (configuration: Configuration, org: Org, ux: UX){
+    const sfdcHandler = new TraceLogSFDCHandler(configuration, org)
+    await sfdcHandler.execute()
+
+    await TraceHandler.deleteLogs({
+        entity: sfdcHandler.getEntity(),
+        filters: configuration.filters,
+        all: configuration.all
     }, org, ux)
 }

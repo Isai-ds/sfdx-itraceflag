@@ -32,3 +32,12 @@ export function handleQueryException (error){
 
     }
 }
+
+export function chunkArray (arr: any[], size: number): any[]{
+    const result = []
+    for (let i = 0; i < arr.length; i += size){
+        let chunk = arr.slice(i, i + size)
+        result.push(chunk)
+    }
+    return result
+}

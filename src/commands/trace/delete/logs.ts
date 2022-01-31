@@ -2,13 +2,13 @@ import { flags, SfdxCommand } from '@salesforce/command';
 import { Messages, SfdxError } from '@salesforce/core';
 import { AnyJson } from '@salesforce/ts-types';
 import {ItraceConstants} from '../../../constants'
-import {logs} from '../../../main'
+import {deleteLogs} from '../../../main'
 
 // Initialize Messages with the current plugin directory
 Messages.importMessagesDirectory(__dirname);
-const messages = Messages.loadMessages(ItraceConstants.PACKAGE_NAME, ItraceConstants.COMMAND_GET_LOG);
+const messages = Messages.loadMessages(ItraceConstants.PACKAGE_NAME, ItraceConstants.COMMAND_DELETE_LOGS);
 
-export default class TraceFlagGetLogs extends SfdxCommand {
+export default class TraceFlagDeleteLogs extends SfdxCommand {
 
   public static description = messages.getMessage('commandDescription');
   public static examples = [messages.getMessage('commandExample1'),messages.getMessage('commandExample2'),messages.getMessage('commandExample3')];
@@ -25,24 +25,24 @@ export default class TraceFlagGetLogs extends SfdxCommand {
       description: messages.getMessage('filter'),
       required: false
     }),
-    directory: flags.directory({
-      char: 'd',
-      description: messages.getMessage('directory'),
-      required: true
+    'all': flags.boolean({
+      default: false,
+      description: messages.getMessage('all'),
+      required: false
     }) 
   };
 
   public async run(): Promise<AnyJson> {
     
     try{     
-      await logs({
-          entity: this.flags.entity,
-          filters: this.flags.filter,
-          directory: this.flags.directory
-        },
-        this.org,
-        this.ux
-      )
+      await deleteLogs({
+        entity: this.flags.entity,
+        filters: this.flags.filter,
+        all: this.flags.all
+      },
+      this.org,
+      this.ux
+    )
     } catch (error){
       throw new SfdxError(error.message);
     }
