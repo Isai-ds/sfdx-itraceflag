@@ -230,10 +230,10 @@ class TraceHandlerDeleteLog extends TraceHandlerLogs{
 
     async deleteApexLogs (): Promise<void> {
         this.ux.startSpinner(`Found ${this.apexLogs.length} logs to delete.`)
-        const logIdsChunks = util.chunkArray(this.getApexLogIds(), 100)
-        const groupChunks = util.chunkArray(logIdsChunks, 6)
+        const logIdsChunks = util.chunkArray(this.getApexLogIds(), ItraceConstants.CHUNK_SIZE_RECORD_NUMBER)
+        const groupChunks = util.chunkArray(logIdsChunks, ItraceConstants.DELETION_THREAD_NUMBER)
         let promiseArrayDeletion = [] as Promise<any[]>[]
-        let count = 0
+        let countApexLogsDeleted = 0
 
         for (const chunk of groupChunks){
             this.ux.setSpinnerStatus(`Deleting logs`)
@@ -242,9 +242,9 @@ class TraceHandlerDeleteLog extends TraceHandlerLogs{
                 const request = this.sfDAO.deleteApexLogs(logsIds);
                 promiseArrayDeletion.push(request)
             }
-            count += await this.bulkApexLogDeletion(promiseArrayDeletion)
-       }
-        this.ux.stopSpinner(`Total of logs deleted: ${count}`)
+            countApexLogsDeleted += await this.bulkApexLogDeletion(promiseArrayDeletion)
+        }
+        this.ux.stopSpinner(`Total of logs deleted: ${countApexLogsDeleted}. Failed logs deleted: ${this.apexLogs.length - countApexLogsDeleted}`)
     }
 
     async delete (): Promise<void>{

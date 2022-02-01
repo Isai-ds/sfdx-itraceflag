@@ -16,4 +16,6 @@ export namespace ItraceConstants {
     export const DEFAULT_MINUTES = 30
     export const KBYTES = 10000
     export const MBYTES = 10000000
+    export const CHUNK_SIZE_RECORD_NUMBER = 30
+    export const DELETION_THREAD_NUMBER = 5
 }
