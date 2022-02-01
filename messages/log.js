@@ -1,6 +1,6 @@
 module.exports = {
   "commandDescription": "Set a trace flag for the specified user", 
-  "entity": "[default: targetusername] salesforce user id to set the trace",
+  "entity": "[default: targetusername] salesforce user id or username whose actions triggered the logs",
   "logType": "salesforce log types: DEVELOPER_LOG or USER_DEBUG are only available",
   "startDate": "date and time when the trace flag take effect. Expiration date mus be less 24 hours",
   "expirationDate": "date an time when the trace flag expires",
@@ -8,7 +8,7 @@ module.exports = {
   "duration": "trace log duration in minutes. Default 30 minutes. Duration parameter is ignored when expirationdate is not null",
   "errorNoOrgResults": "No results found for the org '%s'",
   "errorDebugLevelName": "No results found for debug level %s",
-  "errorEntity": "No results found for user id %s",
+  "errorEntity": "No results found for user %s",
   "errorLogType": "Invalid option %s",
   "errorInvalidExpirationDate": "Your expirationdate must be in future",
   "errorInvalidDateRanges": "Invalid ranges. Your startdate is greater than your expiration date",
