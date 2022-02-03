@@ -106,7 +106,7 @@ abstract class TraceHandlerLogs {
         if (filters !== '' && filters){
             query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${entityId}' AND (${filters})` 
         }else{
-            query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${entityId}' ORDER BY StartTime` 
+            query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${entityId}' ORDER BY StartTime LIMIT 50000` 
         }
         return query
     }
@@ -189,7 +189,7 @@ class TraceHandlerDeleteLog extends TraceHandlerLogs{
     async queryApexLogs (): Promise<ApexLog[]>{
         let query = this.buildQuery(this.config.entity.Id, this.config.filters) 
         if (this.config.all){
-            query = `SELECT Id FROM ApexLog` 
+            query = `SELECT Id FROM ApexLog LIMIT 50000` 
         }
         try {
             this.apexLogs = await this.sfDAO.getApexLogs(query)    
