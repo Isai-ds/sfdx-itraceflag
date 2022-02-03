@@ -18,6 +18,7 @@ export interface Configuration{
     filters?: string;
     directory?: string;
     duration?: number
+    all?: boolean
 }
 
 export interface TraceConfig {
@@ -32,6 +33,12 @@ export interface TraceSaveLogConfig {
     entity: Entity;
     filters: string;
     directory: string;
+}
+
+export interface TraceDeleteLogConfig {
+    entity: Entity;
+    filters: string;
+    all: boolean;
 }
 
 export interface ApexLogFile {

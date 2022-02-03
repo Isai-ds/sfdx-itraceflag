@@ -17,7 +17,7 @@ export default class TraceFlagLog extends SfdxCommand {
   protected static requiresUsername = true;
 
   protected static flagsConfig = {
-    entity: flags.id({
+    entity: flags.string({
       char: 'e', 
       description: messages.getMessage('entity')    
     }),

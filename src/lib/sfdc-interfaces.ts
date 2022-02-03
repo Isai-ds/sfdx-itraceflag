@@ -52,7 +52,8 @@ export interface ISalesforceDAO {
     getApexLogs(query:string): Promise<ApexLog[]>
     createTraceFlag(traceFlag: TraceFlag): Promise<RecordResult>
     updateTraceFlag(traceFlag: TraceFlag): Promise<RecordResult>
-
+    updateTraceFlag(traceFlag: TraceFlag): Promise<RecordResult>
+    deleteApexLogs(ids: string[]): Promise<RecordResult[]>
 }
 
 export interface ISalesforceHandler {

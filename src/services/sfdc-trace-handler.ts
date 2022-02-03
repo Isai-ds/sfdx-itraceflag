@@ -1,10 +1,10 @@
 import { UX } from '@salesforce/command'
 import { Org } from '@salesforce/core'
-import {ApexLogFile, IDirectory, TraceConfig, TraceSaveLogConfig} from '../lib/itrace-interfaces' 
+import {ApexLogFile, IDirectory, TraceConfig, TraceSaveLogConfig, TraceDeleteLogConfig} from '../lib/itrace-interfaces' 
 import { ISalesforceREST, ISalesforceDAO, TraceFlag, ApexLog } from '../lib/sfdc-interfaces'
 import * as SalesforeDAO from './sfdc-dao'
 import * as util from '../util' 
-import { ErrorResult } from 'jsforce'
+import { ErrorResult, RecordResult } from 'jsforce'
 import * as SFDCRest from '../services/sfdc-rest'
 import {ItraceConstants} from '../constants'
 import * as DirectoryHandler from '../services/directory-handler'
@@ -15,6 +15,10 @@ export async function trace (configuration: TraceConfig, org: Org, ux: UX) : Pro
 
 export async function saveLogs(configuration: TraceSaveLogConfig, org: Org, ux: UX){
     await new TraceHandlerSaveLog(configuration,org,ux).save()
+}
+
+export async function deleteLogs(configuration: TraceDeleteLogConfig, org: Org, ux: UX){
+    await new TraceHandlerDeleteLog(configuration,org,ux).delete()
 }
 
 class TraceHandler {
@@ -79,33 +83,48 @@ class TraceHandler {
     }
 }
 
-class TraceHandlerSaveLog {
-    config: TraceSaveLogConfig
-    org: Org
+abstract class TraceHandlerLogs {
     ux: UX
+    org: Org
     sfREST: ISalesforceREST
     sfDAO: ISalesforceDAO
     apexLogs: ApexLog[]
-    dirHandler: IDirectory
-    constructor(config: TraceSaveLogConfig, org: Org, ux: UX){
-        this.config = config
-        this.org = org
+    constructor(org: Org, ux: UX){
         this.ux = ux
+        this.org = org
         this.sfREST = SFDCRest.getInstance(this.org.getConnection())
         this.sfDAO = SalesforeDAO.getInstance(org.getConnection())
-        this.dirHandler =  DirectoryHandler.getInstance()
 
     }
-    async queryApexLogs (): Promise<ApexLog[]>{
-        let filters = `WHERE LogUserId = '${this.config.entity.Id}' ORDER BY StartTime`
-        let query: string
-        if (this.config.filters !== '' && this.config.filters){
-            filters = `(${this.config.filters})`
-            query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${this.config.entity.Id}' AND ${filters}` 
-        }else{
-            query = `SELECT Id, LogLength, Status FROM ApexLog ${filters}` 
-        }
+    notResultsFound (): void{
+        this.ux.log(`Found 0 logs`)
+        this.ux.stopSpinner()
+    }
 
+    buildQuery (entityId: string, filters: string): string {
+        let query: string
+        if (filters !== '' && filters){
+            query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${entityId}' AND (${filters})` 
+        }else{
+            query = `SELECT Id, LogLength, Status FROM ApexLog WHERE LogUserId = '${entityId}' ORDER BY StartTime LIMIT 50000` 
+        }
+        return query
+    }
+    
+    abstract queryApexLogs (): Promise<ApexLog[]>;
+}
+
+class TraceHandlerSaveLog extends TraceHandlerLogs{
+    config: TraceSaveLogConfig
+    dirHandler: IDirectory
+    constructor(config: TraceSaveLogConfig, org: Org, ux: UX){
+        super(org, ux)
+        this.config = config
+        this.dirHandler =  DirectoryHandler.getInstance()
+    }
+
+    async queryApexLogs (): Promise<ApexLog[]>{
+        let query = this.buildQuery(this.config.entity.Id, this.config.filters) 
         try {
             this.apexLogs = await this.sfDAO.getApexLogs(query)    
         } catch (error) {
@@ -113,13 +132,6 @@ class TraceHandlerSaveLog {
         }
         
         return this.apexLogs 
-    }
-
-
-
-    notResultsFound (): void{
-        this.ux.log(`Found 0 logs`)
-        this.ux.stopSpinner()
     }
 
     printResultsApexLog(): void {
@@ -133,15 +145,15 @@ class TraceHandlerSaveLog {
         if (bytes < ItraceConstants.KBYTES){
             downloadInfo = `Downloading ${bytes} bytes`
         }else if (bytes > ItraceConstants.KBYTES && bytes < ItraceConstants.MBYTES){
-            downloadInfo = `Downloading ${bytes/ItraceConstants.KBYTES} kilobytes`
+            downloadInfo = `Downloading ${(bytes/ItraceConstants.KBYTES).toFixed(2)} kilobytes`
         }else{
-            downloadInfo = `Downloading ${bytes/ItraceConstants.MBYTES} megabytes`
+            downloadInfo = `Downloading ${(bytes/ItraceConstants.MBYTES).toFixed(2)} megabytes`
         }
         this.ux.startSpinner(`Found ${this.apexLogs.length} logs. ${downloadInfo}`)
 
     }
 
-    async getApexLogs (): Promise<void> {
+    async fetchApexLogs (): Promise<void> {
         this.printResultsApexLog()
         const requests = this.sfREST.getLogs(this.apexLogs)
         
@@ -154,7 +166,6 @@ class TraceHandlerSaveLog {
                 this.ux.log(reason.message);
             });
         })
-       
     }
 
     async save(): Promise<void>{
@@ -163,7 +174,86 @@ class TraceHandlerSaveLog {
         if (util.isEmpty(this.apexLogs)){
             this.notResultsFound()
         }else{
-           await this.getApexLogs()
+           await this.fetchApexLogs()
+        }
+    }
+}
+
+class TraceHandlerDeleteLog extends TraceHandlerLogs{
+    config: TraceDeleteLogConfig
+    constructor(config: TraceDeleteLogConfig, org: Org, ux: UX){
+        super(org, ux)
+        this.config = config
+    }
+
+    async queryApexLogs (): Promise<ApexLog[]>{
+        let query = this.buildQuery(this.config.entity.Id, this.config.filters) 
+        if (this.config.all){
+            query = `SELECT Id FROM ApexLog LIMIT 50000` 
+        }
+        try {
+            this.apexLogs = await this.sfDAO.getApexLogs(query)    
+        } catch (error) {
+            util.handleQueryException(error)
+        }
+        return this.apexLogs 
+    }
+    getApexLogIds (): string[] {
+        const apexLogsIds = [] as string[]        
+        for (const log of this.apexLogs){
+            apexLogsIds.push(log.Id)
+        }
+        return apexLogsIds
+    }
+
+    async bulkApexLogDeletion (promiseArrayDeletion: Promise<any[]>[]): Promise<number> {
+        return new Promise(resolve=>{
+            Promise.all(promiseArrayDeletion).then((values : any[])=>{
+                let count = 0; 
+                for (let i = 0; i < values.length; i++){
+                    const results = values[i] as RecordResult[]
+                    for (const r of results){
+                        if (r.success){
+                            count++
+                        }else{
+                            const e = r as ErrorResult
+                            this.ux.log(e.errors[0])
+                        }
+                    }                    
+                }
+                resolve(count)
+            }).catch((reason)=>{
+                this.ux.log(reason.message);
+            })
+        })       
+    }
+
+    async deleteApexLogs (): Promise<void> {
+        this.ux.startSpinner(`Found ${this.apexLogs.length} logs to delete.`)
+        const logIdsChunks = util.chunkArray(this.getApexLogIds(), ItraceConstants.CHUNK_SIZE_RECORD_NUMBER)
+        const groupChunks = util.chunkArray(logIdsChunks, ItraceConstants.DELETION_THREAD_NUMBER)
+        let promiseArrayDeletion = [] as Promise<any[]>[]
+        let countApexLogsDeleted = 0
+
+        for (const chunk of groupChunks){
+            this.ux.setSpinnerStatus(`Deleting logs`)
+            promiseArrayDeletion = []
+            for (const logsIds of chunk){
+                const request = this.sfDAO.deleteApexLogs(logsIds);
+                promiseArrayDeletion.push(request)
+            }
+            countApexLogsDeleted += await this.bulkApexLogDeletion(promiseArrayDeletion)
+        }
+        this.ux.stopSpinner(`Total of logs deleted: ${countApexLogsDeleted}. Failed logs deleted: ${this.apexLogs.length - countApexLogsDeleted}`)
+    }
+
+    async delete (): Promise<void>{
+        this.ux.startSpinner('Getting logs','Querying logs')               
+        await this.queryApexLogs()
+        if (util.isEmpty(this.apexLogs)){
+            this.notResultsFound()
+        }else{
+            this.deleteApexLogs()
         }
     }
 }

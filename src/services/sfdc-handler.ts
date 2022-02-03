@@ -75,7 +75,7 @@ export class TraceSFDCHandler implements ISalesforceHandler {
     }
 }
 
-export class TraceSaveLogSFDCHandler extends TraceSFDCHandler{
+export class TraceLogSFDCHandler extends TraceSFDCHandler{
     async execute(): Promise<void> {    
         await this.processOrganization()
         await this.processEntity()        
