@@ -14,6 +14,16 @@ sfdx plugins:install sfdx-itraceflag
 ```
 
 # Usage
+
+## trace:delete:logs
+```sh
+sfdx trace:delete:logs -u myOrg -e 0051U000002O1Wg
+```
+
+```sh
+sfdx trace:delete:logs -u myOrg --all
+```
+
 ## trace:get:logs
 ```sh
 sfdx trace:get:logs -u myOrg -d /documents/log 
@@ -33,10 +43,55 @@ sfdx trace:set:log -u myOrg -s 'Dec 16 2021 13:43' -x 'Dec 16 2021 15:00' -e 005
 ```
 ## Command Description
 <!-- commands -->
-* [`sfdx trace:get:logs -d <directory> [-e <id>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracegetlogs--d-directory--e-id--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
-* [`sfdx trace:set:log [-e <id>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracesetlog--e-id--l-userdeveloper--s-datetime--x-datetime--d-string---duration-minutes--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx trace:delete:logs [-e <string>] [-f <string>] [--all] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracedeletelogs--e-string--f-string---all--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx trace:get:logs -d <directory> [-e <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracegetlogs--d-directory--e-string--f-string--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
+* [`sfdx trace:set:log [-e <string>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`](#sfdx-tracesetlog--e-string--l-userdeveloper--s-datetime--x-datetime--d-string---duration-minutes--u-string---apiversion-string---json---loglevel-tracedebuginfowarnerrorfataltracedebuginfowarnerrorfatal)
 
-## `sfdx trace:get:logs -d <directory> [-e <id>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx trace:delete:logs [-e <string>] [-f <string>] [--all] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+
+Delete salesforce logs
+
+```
+Delete salesforce logs
+
+USAGE
+  $ sfdx trace:delete:logs [-e <string>] [-f <string>] [--all] [-u <string>] [--apiversion <string>] [--json] 
+  [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
+
+OPTIONS
+  -e, --entity=entity                                                               [default: targetusername] salesforce
+                                                                                    user id or username whose actions
+                                                                                    triggered the logs
+
+  -f, --filter=filter                                                               filter to query and delete the logs.
+                                                                                    The filter string must be enclosed
+                                                                                    in double quotes. For example
+                                                                                    f="Status != 'Success'"
+
+  -u, --targetusername=targetusername                                               username or alias for the target
+                                                                                    org; overrides default target org
+
+  --all                                                                             remove all logs from the target org.
+                                                                                    Ignore the entity, target user or
+                                                                                    any filter
+
+  --apiversion=apiversion                                                           override the api version used for
+                                                                                    api requests made by this command
+
+  --json                                                                            format output as json
+
+  --loglevel=(trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL)  [default: warn] logging level for
+                                                                                    this command invocation
+
+EXAMPLES
+  $ sfdx trace:delete:logs -u myOrg -e 0051U000002O1Wg
+  $ sfdx trace:delete:logs -u myOrg -f "Operation = 'VFRemoting' AND Status != 'Success'"
+  $ sfdx trace:delete:logs -u myOrg --all
+```
+
+_See code: [lib/commands/trace/delete/logs.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v1.0.1/lib/commands/trace/delete/logs.js)_
+
+## `sfdx trace:get:logs -d <directory> [-e <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Download and save salesforce logs locally
 
@@ -44,7 +99,7 @@ Download and save salesforce logs locally
 Download and save salesforce logs locally
 
 USAGE
-  $ sfdx trace:get:logs -d <directory> [-e <id>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] 
+  $ sfdx trace:get:logs -d <directory> [-e <string>] [-f <string>] [-u <string>] [--apiversion <string>] [--json] 
   [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
 OPTIONS
@@ -52,8 +107,8 @@ OPTIONS
                                                                                     logs
 
   -e, --entity=entity                                                               [default: targetusername] salesforce
-                                                                                    user id whose actions triggered the
-                                                                                    logs
+                                                                                    user id or username whose actions
+                                                                                    triggered the logs
 
   -f, --filter=filter                                                               filter to query and get the logs.
                                                                                     The filter string must be enclosed
@@ -77,9 +132,9 @@ EXAMPLES
   $ sfdx trace:get:logs -u myOrg -d /documents/log -f "Operation = 'VFRemoting' AND Status != 'Success'"
 ```
 
-_See code: [lib/commands/trace/get/logs.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.4/lib/commands/trace/get/logs.js)_
+_See code: [lib/commands/trace/get/logs.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v1.0.1/lib/commands/trace/get/logs.js)_
 
-## `sfdx trace:set:log [-e <id>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
+## `sfdx trace:set:log [-e <string>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]`
 
 Set a trace flag for the specified user
 
@@ -87,7 +142,7 @@ Set a trace flag for the specified user
 Set a trace flag for the specified user
 
 USAGE
-  $ sfdx trace:set:log [-e <id>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration 
+  $ sfdx trace:set:log [-e <string>] [-l user|developer] [-s <datetime>] [-x <datetime>] [-d <string>] [--duration 
   <minutes>] [-u <string>] [--apiversion <string>] [--json] [--loglevel 
   trace|debug|info|warn|error|fatal|TRACE|DEBUG|INFO|WARN|ERROR|FATAL]
 
@@ -96,7 +151,8 @@ OPTIONS
                                                                                     name of the debug level to assign
 
   -e, --entity=entity                                                               [default: targetusername] salesforce
-                                                                                    user id to set the trace
+                                                                                    user id or username whose actions
+                                                                                    triggered the logs
 
   -l, --logtype=(user|developer)                                                    [default: user] salesforce log
                                                                                     types: DEVELOPER_LOG or USER_DEBUG
@@ -131,5 +187,5 @@ EXAMPLES
   $ sfdx trace:set:log -u myOrg -s 'Dec 16 2021 13:43' -x 'Dec 16 2021 15:00' -d Custom_Log_Type -l developer
 ```
 
-_See code: [lib/commands/trace/set/log.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v0.0.4/lib/commands/trace/set/log.js)_
+_See code: [lib/commands/trace/set/log.js](https://github.com/Isai-ds/sfdx-itraceflag/blob/v1.0.1/lib/commands/trace/set/log.js)_
 <!-- commandsstop -->
