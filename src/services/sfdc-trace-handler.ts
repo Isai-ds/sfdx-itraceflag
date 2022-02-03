@@ -145,9 +145,9 @@ class TraceHandlerSaveLog extends TraceHandlerLogs{
         if (bytes < ItraceConstants.KBYTES){
             downloadInfo = `Downloading ${bytes} bytes`
         }else if (bytes > ItraceConstants.KBYTES && bytes < ItraceConstants.MBYTES){
-            downloadInfo = `Downloading ${bytes/ItraceConstants.KBYTES} kilobytes`
+            downloadInfo = `Downloading ${(bytes/ItraceConstants.KBYTES).toFixed(2)} kilobytes`
         }else{
-            downloadInfo = `Downloading ${bytes/ItraceConstants.MBYTES} megabytes`
+            downloadInfo = `Downloading ${(bytes/ItraceConstants.MBYTES).toFixed(2)} megabytes`
         }
         this.ux.startSpinner(`Found ${this.apexLogs.length} logs. ${downloadInfo}`)
 
